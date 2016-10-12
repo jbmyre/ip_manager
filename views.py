@@ -72,9 +72,9 @@ def single_host_ping(request, ip):
         host.ping_status = "Undetermined"
     else:
         if "0" in output.decode('utf-8').split(",")[1]:
-            host.ping_status = "Failed"
-        else:
             host.ping_status = "Successful"
+        else:
+            host.ping_status = "Failed"
     host.last_ping = arrow.now('local').isoformat()
     host.save()
     return HttpResponse("ok")
