@@ -47,7 +47,7 @@
         function get_host_detail(ip){
           //ajax call - gets form html from server and sets it into a modal
           // var url = "{#% url 'host_details' %#}";
-          var url = "http://127.0.0.1:8000/ip_manager/details/";
+          var url = "http://129.228.157.232:8000/ip_manager/details/";
 
           $('#ip_addr').val(ip);
 
@@ -63,12 +63,12 @@
 
         function load_page() {
             //ajax call to refresh page - used after all host updates
-            $('#host_table_div').load("http://127.0.0.1:8000/ip_manager/host_table/{{subnet_name}}");
+            $('#host_table_div').load("http://129.228.157.232:8000/ip_manager/host_table/{{subnet_name}}");
             init(); // runs docready functions on dynamic html
         }
 
         function ping_host(ip){
-            var url ="http://127.0.0.1:8000/ip_manager/ping_host/" + ip;
+            var url ="http://129.228.157.232:8000/ip_manager/ping_host/" + ip;
             $.get(url);
         }
 

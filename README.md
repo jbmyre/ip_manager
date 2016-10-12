@@ -1,6 +1,6 @@
-##Network Manager
+##Ip Manager
 
-Django project to manage IP addresses and subnets.
+Django app to manage IP addresses and subnets.
 
 ###Requirements:
 <ul>
@@ -10,5 +10,14 @@ Django project to manage IP addresses and subnets.
 <li>arrow</li>
 </ul>
 
+The ping functionality only works on linux or osx at the moment.
+
+
+###Install 
 
 pip install ipcalc arrow
+
+add 'ip_manager' to INSTALLED_APPS in settings.py
+
+run ./manage.py migrate
+
