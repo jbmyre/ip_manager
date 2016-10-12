@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+		<title>{% block title %}{% endblock %}</title>
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" href="/static/ip_manager/css/materialize.min.css">
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+        {#<script src="/static/ip_manager/js/materialize.min.js"></script>#}
+		{% block head %}{% endblock %}
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+		<style>
+            #new_subnet_button{
+                padding: 0 .5rem !important;
+            }
+            {% block style %}{% endblock %}
+
+            #search{
+                margin: 0;
+                height: 55px;
+
+            }
+		</style>
+    </head>
+
+    <body class="grey">
+
+	{% include "ip_manager/navigation.html" %}
+
+	{% block content %}{% endblock %}
+
+	{% block script %}{% endblock %}
+
+	<script>
+
+        function init(){
+
+            $(".button-collapse").sideNav();
+
+			$(".dropdown-button").dropdown();
+
+            $('.modal-trigger').leanModal({
+                  dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                  opacity: .5, // Opacity of modal background
+                  in_duration: 300, // Transition in duration
+                  out_duration: 200, // Transition out duration
+                  starting_top: '4%', // Starting top style attribute
+                  ending_top: '10%', // Ending top style attribute
+                  //ready: function() { get_new_subnet_form(); }, // Callback for Modal open
+                  //complete: function() { alert('Closed'); } // Callback for Modal close
+            });
+
+            $("#new_subnet_submit").click(function(){
+
+                var form = $("#new_subnet_form").serialize()
+                var url = $("#new_subnet_form").attr( "action" );
+                var posting = $.post( url, form);
+
+                posting.done(function( data ) {
+                    $("#NewSubnetForm").closeModal();
+                });
+
+            });
+
+            $('.scrollspy').scrollSpy();
+
+            $('.tooltipped').tooltip({delay: 50});
+
+            $('#search').autocomplete({
+                data: {
+                  "Apple": null,
+                  "Microsoft": null,
+                  "Google": 'http://placehold.it/250x250'
+                }
+            });
+
+        }
+
+
+        $( document ).ready(function () {
+            init();
+		});
+
+	</script>
+
+
+	</body>
+</html>

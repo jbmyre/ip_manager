@@ -1,0 +1,33 @@
+<table class="bordered highlight responsive-table">
+
+    <thead>
+      <tr>
+          <th>Subnet Name</th>
+          <th>Base IP</th>
+          <th>Vlan</th>
+          <th>Netmask</th>
+          <th>Gateway</th>
+          <th>Primary DNS</th>
+          <th>Secondary DNS</th>
+          <th>Type</th>
+          <th>Last Ping Sweep</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for s in subnets %}
+      <tr>
+          <td><a href="/ip_manager/hosts/{{ s.name }}">{{ s.name }}</a></td>
+          <td>{{ s.first_host }}{{ s.cidr }}</td>
+          <td>{{ s.vlan }}</td>
+          <td>{{ s.netmask }}</td>
+          <td>{{ s.gateway }}</td>
+          <td>{{ s.dns_1 }}</td>
+          <td>{{ s.dns_2 }}</td>
+          <td>{{ s.type }}</td>
+          <td>{{ s.last_sweep }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+</table>

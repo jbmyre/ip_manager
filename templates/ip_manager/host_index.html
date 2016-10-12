@@ -1,0 +1,82 @@
+{% extends "ip_manager/base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="card-panel hoverable">
+            <div id="host_table_div"></div>
+            <div id="page_bottom" class="scrollspy"></div>
+        </div>
+    </div>
+
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large black">
+          <i class="large material-icons">navigation</i>
+        </a>
+         <ul>
+          <li><a href="#host_table" class="btn-floating grey darken-3"><i class="material-icons">arrow_upward</i></a></li>
+          <li><a href="#page_bottom" class="btn-floating grey darken-3"><i class="material-icons">arrow_downward</i></a></li>
+        </ul>
+    </div>
+
+    <div id="host_modal" class="modal bottom-sheet">
+        <div id="host_details"></div>
+    </div>
+
+    <form id="token">
+      {%csrf_token%}
+      <input id="ip_addr" type='hidden' name='ip' value='' />
+    </form>
+
+    <script>
+
+        function update_host() {
+            //ajax call - sends a post request to update a hosts details
+            var url = $("#host_update_form").attr("action");
+            var form = $("#host_update_form").serialize()
+            var posting =$.post(url,form);
+            posting.done(function (data) {
+                Materialize.toast(data.msg, 2000, data.css);
+                $("#host_modal").closeModal();
+                load_page();
+            });
+        }
+
+        function get_host_detail(ip){
+          //ajax call - gets form html from server and sets it into a modal
+          // var url = "{#% url 'host_details' %#}";
+          var url = "http://127.0.0.1:8000/ip_manager/details/";
+
+          $('#ip_addr').val(ip);
+
+          var d = $("#token").serialize();
+
+          $("#host_details").empty();
+
+          $.post(url , d ,function (data) {
+              $("#host_details").html(data);
+              $("#host_modal").openModal();
+          })
+        }
+
+        function load_page() {
+            //ajax call to refresh page - used after all host updates
+            $('#host_table_div').load("http://127.0.0.1:8000/ip_manager/host_table/{{subnet_name}}");
+            init(); // runs docready functions on dynamic html
+        }
+
+        function ping_host(ip){
+            var url ="http://127.0.0.1:8000/ip_manager/ping_host/" + ip;
+            $.get(url);
+        }
+
+
+         $(document).ready(function() {
+            load_page();
+          });
+
+    </script>
+
+{% endblock %}

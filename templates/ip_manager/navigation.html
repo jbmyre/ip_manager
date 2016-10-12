@@ -1,0 +1,107 @@
+<!-- Dropdown Structure -->
+
+<ul id="dropdown1" class="dropdown-content">
+  <li><a class="black-text" href="#!">one</a></li>
+  <li><a class="black-text" href="#!">two</a></li>
+  <li class="divider"></li>
+  <li class="center"><button id="new_subnet_button" data-target="NewSubnetForm" class="btn modal-trigger black white-text">New Subnet</button></li>
+</ul>
+
+<div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper white">
+
+        <a href="#!" class="brand-logo grey-text">{% block title %}{% endblock %}</a>
+
+        <ul class="right hide-on-med-and-down grey-text">
+{#          <li><a  class="grey-text" href="sass.html">Sass</a></li>#}
+         <li>
+              <form>
+                <div class="input-field">
+                  <input id="search" type="search" required>
+                  <label for="search"><i class="material-icons grey-text">search</i></label>
+                  <i class="material-icons ">close</i>
+                </div>
+              </form>
+            </li>
+
+          <li class="center"><a class="dropdown-button grey-text center" href="#!" data-activates="dropdown1">Subnets<i class="material-icons right grey-text">arrow_drop_down</i></a></li>
+        </ul>
+
+
+      </div>
+    </nav>
+</div>
+
+<div id="NewSubnetForm" class="modal">
+<form id="new_subnet_form" action="/ip_manager/subnet/new">
+
+            {% csrf_token %}
+
+            <div class="modal-content">
+
+                <div class="row">
+
+
+                    <div class="input-field col s9">
+                      <input name="name" id="name" type="text" class="validate">
+                      <label class="active" for="name">Subnet Name</label>
+                    </div>
+
+                    <div class="col s3 center">
+                      <h6>Network Type</h6>
+                      <div class="switch">
+                        <label>
+                          Static
+                          <input name="type" type="checkbox">
+                          <span class="lever"></span>
+                          DHCP
+                        </label>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="input-field col s8">
+                      <input name="first_host" id="first_host" type="text" class="validate">
+                      <label class="active" for="first_host">Base IP Address</label>
+                    </div>
+
+                    <div class="input-field col s2">
+                      <input value="/24" name="cidr" id="cidr" type="text" class="validate">
+                      <label class="active" for="cidr">Scope</label>
+                    </div>
+
+                    <div class="input-field col s2">
+                      <input name="vlan" id="vlan" type="text" class="validate">
+                      <label class="active" for="vlan">VLAN Number</label>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="input-field col s4">
+                      <input name="gateway" id="gateway" type="text" class="validate">
+                      <label class="active" for="gateway">Gateway</label>
+                    </div>
+
+                    <div class="input-field col s4">
+                      <input name="dns1" id="dns1" type="text" class="validate">
+                      <label class="active" for="dns1">Primary DNS Server</label>
+                    </div>
+
+                    <div class="input-field col s4">
+                      <input name="dns2" id="dns2" type="text" class="validate">
+                      <label class="active" for="dns2">Secondary DNS Server</label>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+              <a id="new_subnet_submit" class=" modal-action modal-close waves-effect waves-green btn-flat">Create Subnet</a>
+            </div>
+</form>
+</div>

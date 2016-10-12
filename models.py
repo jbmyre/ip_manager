@@ -1,0 +1,96 @@
+from __future__ import unicode_literals
+
+from django.db import models
+from django.db.models.signals import post_save
+
+
+class Subnet(models.Model):
+    STATIC = 'Static'
+    DHCP = 'DHCP'
+
+    name = models.CharField(
+        max_length=100
+    )
+
+    vlan = models.IntegerField(
+        verbose_name='Vlan Id'
+    )
+
+    first_host = models.GenericIPAddressField(protocol='IPv4')
+    last_host = models.GenericIPAddressField(protocol='IPv4')
+
+    cidr = models.CharField(
+        max_length=3,
+        default='/24',
+        help_text='The CIDR notation for the subnet (ie "/24"). defaults to /24'
+    )
+
+    netmask = models.GenericIPAddressField(protocol='IPv4', default="255.255.255.0")
+    broadcast = models.GenericIPAddressField(protocol='IPv4')
+    dns_1 = models.GenericIPAddressField(protocol='IPv4')
+    dns_2 = models.GenericIPAddressField(protocol='IPv4')
+    gateway = models.GenericIPAddressField(protocol='IPv4')
+    last_sweep = models.DateTimeField(null=True)
+
+    SUBNET_TYPE_CHOICES = (
+        (STATIC, 'Static'),
+        (DHCP, 'DHCP'),
+    )
+
+    type = models.CharField(
+        max_length=2,
+        choices=SUBNET_TYPE_CHOICES,
+        default=STATIC,
+    )
+
+    dhcp_range = models.GenericIPAddressField(protocol='IPv4',null=True)
+
+
+class Host(models.Model):
+    STATIC = 'Static'
+    DHCP_RESERVATION = 'DHCP'
+    SUCCESS = 'Success'
+    UNDETERMINED = 'Undetermined'
+    FAIL = 'Fail'
+
+    address = models.GenericIPAddressField(protocol='IPv4',unique=True)
+
+    subnet = models.CharField(
+        max_length=100
+    )
+    machine_name = models.CharField(
+        max_length=100
+    )
+    building = models.CharField(
+        max_length=100
+    )
+    location = models.CharField(
+        max_length=100
+    )
+    machine_dec = models.TextField()
+
+    ADDRESS_TYPE_CHOICES = (
+        (STATIC, 'Static'),
+        (DHCP_RESERVATION, 'DHCP Reservation'),
+    )
+    address_type = models.CharField(
+        max_length=2,
+        choices=ADDRESS_TYPE_CHOICES,
+        default=STATIC,
+    )
+
+    eth_port = models.IntegerField(verbose_name='Vlan Id', default=0, )
+
+    notes = models.TextField()
+
+    PING_STATUS_CHOICES = (
+        (SUCCESS, 'Success'),
+        (UNDETERMINED, 'Undetermined'),
+        (FAIL, 'Failed'),
+    )
+    ping_status = models.CharField(
+        max_length=2,
+        choices=PING_STATUS_CHOICES,
+        default=UNDETERMINED,
+    )
+    last_ping = models.DateTimeField(null=True)

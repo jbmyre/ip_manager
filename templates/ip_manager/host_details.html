@@ -1,0 +1,81 @@
+{% for h in host %}
+<div class="row">
+    <div class="col s12"><h5>Details for: {{ h.address }}</h5></div>
+</div>
+
+
+<form id="host_update_form" action="http://127.0.0.1:8000/ip_manager/update/host/">
+    <div class="modal-content">
+        {% csrf_token %}
+         <input type="hidden" name="address" value="{{ h.address }}"/>
+        <div class="row">
+            <div class="input-field col s3">
+              <input value="{{ h.machine_name }}" name="name" id="name" type="text" class="validate">
+              <label class="active" for="machine_name">Machine Name</label>
+            </div>
+
+            <div class="input-field col s3">
+              <input value="{{ h.building }}" name="building" id="building" type="text" class="validate">
+              <label class="active" for="building">Building</label>
+            </div>
+
+            <div class="input-field col s3">
+              <input value="{{ h.location }}" name="location" id="location" type="text" class="validate">
+              <label class="active" for="location">Location</label>
+            </div>
+
+             <div class="input-field col s3">
+              <input value="{{ h.eth_port }}" name="eth_port" id="eth_port" type="text" class="validate">
+              <label class="active" for="eth_port">Ethernet Port</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s6">
+              <textarea name="machine_dec" id="machine_dec" class="materialize-textarea">{{ h.machine_dec }}</textarea>
+              <label class="active" for="machine_dec">Machine Description</label>
+            </div>
+            <div class="input-field col s6">
+              <textarea name="notes" id="notes" class="materialize-textarea">{{ h.notes }}</textarea>
+              <label class="active" for="notes">Notes</label>
+            </div>
+        </div>
+    </div>
+
+{#    <div class="row center">#}
+{#        <div class=" col s8 offset-s3">#}
+{#            <div class="center" id="chart_div" style="width: 950px; height: 300px;"></div>#}
+{#        </div>#}
+{#    </div>#}
+
+    <div class="modal-footer">
+      <a onclick="update_host()" class="waves-effect waves-green btn-flat">Save</a>
+    </div>
+
+</form>
+{##}
+{#<script type="text/javascript">#}
+{#  google.charts.load('current', {'packages':['corechart']});#}
+{#  google.charts.setOnLoadCallback(drawChart);#}
+{#  function drawChart() {#}
+{#    var data = google.visualization.arrayToDataTable([#}
+{#      ['Pinged On',  'Successful Ping', 'Undetermined', 'Ping Failed'],#}
+{#      ['Saturday',           0,              0,              -1],#}
+{#      ['Sunday',             0,              1,              0],#}
+{#      ['Monday',             2,              0,              0],#}
+{#      ['Tuesday',            0,              1,              0],#}
+{#    ]);#}
+{##}
+{#    var options = {#}
+{#      title: 'Ping History',#}
+{#      vAxis: {title: 'Ping Results'},#}
+{#      isStacked: true#}
+{#    };#}
+{##}
+{#    var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));#}
+{##}
+{#    chart.draw(data, options);#}
+{#  }#}
+{#</script>#}
+
+{% endfor %}
