@@ -69,7 +69,10 @@
 
         function ping_host(ip){
             var url ="http://129.228.157.232:8000/ip_manager/ping_host/" + ip;
-            $.get(url);
+            $.get(url,function () {
+                load_page();
+            });
+
         }
 
 
