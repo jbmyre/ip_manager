@@ -1,7 +1,7 @@
 <table id="host_table" class="bordered highlight responsive-table centered scrollspy">
     <thead>
       <tr>
-          <th>Machine Name</th>
+          <th >Machine Name</th>
           <th class="center tooltipped" data-position="top" data-delay="50" data-tooltip="Click to edit">IP</th>
           <th>Building</th>
           <th>Location</th>
@@ -16,7 +16,7 @@
     <tbody>
       {% for h in hosts %}
       <tr>
-          <td>{{ h.machine_name }}</td>
+          <td class="left">{{ h.machine_name }}</td>
           <td class="center"><a onclick="get_host_detail('{{ h.address }}')">{{ h.address }}</a></td>
           <td>{{ h.building }}</td>
           <td>{{ h.location}}</td>

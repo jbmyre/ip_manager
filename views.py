@@ -68,6 +68,7 @@ def single_host_ping(request, ip):
     print ip
     host = Host.objects.get(id=ip)
     output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
+    print output.decode('utf-8')
     if "unknown host" in output.decode('utf-8'):
         host.ping_status = "Undetermined"
     else:
