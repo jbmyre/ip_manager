@@ -93,4 +93,9 @@ class Host(models.Model):
         choices=PING_STATUS_CHOICES,
         default=UNDETERMINED,
     )
+
     last_ping = models.DateTimeField(null=True)
+
+
+class PingHistory(models.Model):
+    host = models.ForeignKey(Host, on_delete=models.CASCADE)

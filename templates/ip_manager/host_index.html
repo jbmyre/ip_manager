@@ -2,6 +2,40 @@
 
 {% block title %}{% endblock %}
 
+{% block navigation %}
+    <ul id="dropdown1" class="dropdown-content">
+      <li><a class="black-text" href="#!">one</a></li>
+      <li class="divider"></li>
+      <li class="center"><button id="new_subnet_button" data-target="NewSubnetForm" class="btn modal-trigger black white-text">New Subnet</button></li>
+    </ul>
+
+    <div class="navbar-fixed">
+        <nav>
+          <div class="nav-wrapper white">
+
+            <a href="/ip_manager" class="brand-logo grey-text">{{subnet_name}}</a>
+
+            <ul class="right hide-on-med-and-down grey-text">
+           {#<li><a  class="grey-text" href="sass.html">Sass</a></li>#}
+             <li>
+                  <form>
+                    <div class="input-field">
+                      <input id="search" type="search" required>
+                      <label for="search"><i class="material-icons grey-text">search</i></label>
+                      <i class="material-icons ">close</i>
+                    </div>
+                  </form>
+              </li>
+
+              <li class="center"><a class="dropdown-button grey-text center" data-activates="dropdown1">Subnets<i class="material-icons right grey-text">arrow_drop_down</i></a></li>
+            </ul>
+
+          </div>
+        </nav>
+    </div>
+{% endblock %}
+
+
 {% block content %}
 
     <div class="container">
@@ -12,9 +46,28 @@
                    <a class="waves-effect waves-light btn">Find an open IP</a>
                </div>
                <div class="col s3">
-                   <a class="waves-effect waves-light btn">Ping Sweep</a>
+                   <a onclick="ping_sweep()" class="waves-effect waves-light btn">Ping Sweep</a>
                </div>
            </div>
+
+           <div id="progress_wrapper" >
+
+               <div class="row">
+                   <div class="col s8 offset-s2">
+                        <h5>Pinging all hosts on: {{subnet_name}}</h5>
+                   </div>
+               </div>
+
+               <div class="row">
+                   <div class="col s8 offset-s2">
+                         <div class="progress">
+                             <div class="indeterminate"></div>
+                         </div>
+                   </div>
+               </div>
+
+           </div>
+
         </div>
 
 
@@ -22,15 +75,16 @@
             <div id="host_table_div"></div>
             <div id="page_bottom" class="scrollspy"></div>
         </div>
+
     </div>
 
     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-large black">
-          <i class="large material-icons grey-text">more_vert</i>
+        <a class="btn-floating btn-large white">
+          <i class="large material-icons grey-text text-darken-3">more_vert</i>
         </a>
          <ul>
-          <li><a href="#host_table" class="btn-floating grey darken-3"><i class="material-icons">arrow_upward</i></a></li>
-          <li><a href="#page_bottom" class="btn-floating grey darken-3"><i class="material-icons">arrow_downward</i></a></li>
+          <li><a href="#host_table" class="btn-floating white"><i class="material-icons grey-text text-darken-3">arrow_upward</i></a></li>
+          <li><a href="#page_bottom" class="btn-floating white"><i class="material-icons grey-text text-darken-3">arrow_downward</i></a></li>
         </ul>
     </div>
 
@@ -48,7 +102,7 @@
         function update_host() {
             //ajax call - sends a post request to update a hosts details
             var url = $("#host_update_form").attr("action");
-            var form = $("#host_update_form").serialize()
+            var form = $("#host_update_form").serialize();
             var posting =$.post(url,form);
             posting.done(function (data) {
                 Materialize.toast(data.msg, 2000, data.css);
@@ -59,11 +113,9 @@
 
         function get_host_detail(ip){
           //ajax call - gets form html from server and sets it into a modal
-          // var url = "{#% url 'host_details' %#}";
+          //var url = "{#% url 'host_details' %#}";
           var url = "http://129.228.157.88:8000/ip_manager/details/";
-
           $('#ip_addr').val(ip);
-
           var d = $("#token").serialize();
 
           $("#host_details").empty();
@@ -89,7 +141,22 @@
         }
 
 
+        function ping_sweep() {
+
+            $("#progress_wrapper").slideDown('fast', function () {
+
+                $("#progress_wrapper").slideUp('fast',function () {
+
+                    load_page();
+
+                });
+
+            });
+
+        }
+
          $(document).ready(function() {
+
             load_page();
           });
 
