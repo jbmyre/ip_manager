@@ -1,6 +1,10 @@
 ##Ip Manager
 
-Django app to manage IP addresses and subnets.
+Django app to manage IP addresses and subnets. 
+
+If you don't know how to set up a django project - this is not for you.
+
+Pull requests are welcome!
 
 ###Requirements:
 <ul>
