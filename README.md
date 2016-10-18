@@ -17,7 +17,7 @@ pip install ipcalc arrow
 
 add 'ip_manager' to INSTALLED_APPS in settings.py
 
-add 'url(r'^ip_manager/', include('ip_manager.urls')),' to urls.py
+add 'url(r'^ip_manager/', include('ip_manager.urls', namespace="ip_manager")),' to urls.py
 
 run ./manage.py collectstatic
 

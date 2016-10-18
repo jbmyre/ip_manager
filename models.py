@@ -38,12 +38,23 @@ class Subnet(models.Model):
     )
 
     type = models.CharField(
-        max_length=2,
+        max_length=20,
         choices=SUBNET_TYPE_CHOICES,
         default=STATIC,
     )
 
-    dhcp_range = models.GenericIPAddressField(protocol='IPv4',null=True)
+    dhcp_range = models.GenericIPAddressField(
+        blank=True,
+        protocol='IPv4',
+        null=True
+    )
+
+    def __str__(self):
+        return "%s" % self.name
+
+    class Meta:
+        verbose_name = ('Subnet')
+        verbose_name_plural = ('Subnets')
 
 
 class Host(models.Model):
@@ -74,7 +85,7 @@ class Host(models.Model):
         (DHCP_RESERVATION, 'DHCP Reservation'),
     )
     address_type = models.CharField(
-        max_length=2,
+        max_length=20,
         choices=ADDRESS_TYPE_CHOICES,
         default=STATIC,
     )
@@ -89,12 +100,22 @@ class Host(models.Model):
         (FAIL, 'Failed'),
     )
     ping_status = models.CharField(
-        max_length=2,
+        max_length=20,
         choices=PING_STATUS_CHOICES,
         default=UNDETERMINED,
     )
 
-    last_ping = models.DateTimeField(null=True)
+    last_ping = models.DateTimeField(
+        blank=True,
+        null=True)
+
+    def __str__(self):
+        return "%s" % self.address
+
+    class Meta:
+        ordering = ('id',)
+        verbose_name = ('Host')
+        verbose_name_plural = ('Hosts')
 
 
 class PingHistory(models.Model):
