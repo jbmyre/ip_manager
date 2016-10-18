@@ -13,15 +13,15 @@ Django app to manage IP addresses and subnets.
 
 ###Install 
 
-'''pip install ipcalc arrow'''
+```pip install ipcalc arrow```
 
-add 'ip_manager' to INSTALLED_APPS in settings.py
+add ```'ip_manager'``` to INSTALLED_APPS in settings.py
 
-add 'url(r'^ip_manager/', include('ip_manager.urls', namespace="ip_manager")),' to urls.py
+add ```url(r'^ip_manager/', include('ip_manager.urls', namespace="ip_manager")),``` to urls.py
 
-run '''./manage.py collectstatic'''
+run ```./manage.py collectstatic```
 
-run '''./manage.py migrate'''
+run ```./manage.py migrate```
 
 
 ###Features
