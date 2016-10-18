@@ -9,6 +9,7 @@ class Subnet(models.Model):
     DHCP = 'DHCP'
 
     name = models.CharField(
+        verbose_name="Subnet Name",
         max_length=100
     )
     vlan = models.IntegerField(
@@ -21,6 +22,7 @@ class Subnet(models.Model):
         protocol='IPv4'
     )
     cidr = models.CharField(
+        verbose_name="CIDR Scope",
         max_length=3,
         default='/24',
         help_text='The CIDR notation for the subnet (ie "/24"). defaults to /24'
@@ -33,16 +35,19 @@ class Subnet(models.Model):
         protocol='IPv4'
     )
     dns_1 = models.GenericIPAddressField(
+        verbose_name="Primary DNS Server",
         blank=True,
         null=True,
         protocol='IPv4'
     )
     dns_2 = models.GenericIPAddressField(
+        verbose_name="Secondary DNS Server",
         blank=True,
         null=True,
         protocol='IPv4'
     )
     gateway = models.GenericIPAddressField(
+        verbose_name="Gateway",
         protocol='IPv4'
     )
     last_sweep = models.DateTimeField(
@@ -54,6 +59,7 @@ class Subnet(models.Model):
         (DHCP, 'DHCP'),
     )
     type = models.CharField(
+        verbose_name="Subnet Type",
         max_length=20,
         choices=SUBNET_TYPE_CHOICES,
         default=STATIC,
@@ -98,6 +104,7 @@ class Host(models.Model):
         max_length=100
     )
     machine_dec = models.TextField(
+        verbose_name="Machine Description",
         blank=True,
         null=True,
     )
