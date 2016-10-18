@@ -26,9 +26,7 @@ run ```./manage.py migrate```
 
 ###Features
 
-Pings hosts or entire subnets, from the browser or on a cron schedule.
-
-Keeps a history of all ping attempts, history can be reviewed in pretty charts.
+Pings hosts or entire subnets, from the browser
 
 The ping functionality only works on linux or osx at the moment.
 
@@ -36,3 +34,10 @@ Find an open ip on a subnet.
 
 Material design
 
+###Coming soon 
+
+ Ping functionality on windows
+ 
+ Run ping sweeps on as a cron task
+ 
+ Keeps a history of all ping attempts, history can be reviewed in pretty charts.
