@@ -17,6 +17,10 @@ pip install ipcalc arrow
 
 add 'ip_manager' to INSTALLED_APPS in settings.py
 
+add 'url(r'^ip_manager/', include('ip_manager.urls')),' to urls.py
+
+run ./manage.py collectstatic
+
 run ./manage.py migrate
 
 
@@ -29,3 +33,4 @@ Keeps a history of all ping attempts, history can be reviewed in pretty charts.
 The ping functionality only works on linux or osx at the moment.
 
 Find an open ip on a subnet.
+

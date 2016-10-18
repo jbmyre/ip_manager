@@ -41,14 +41,13 @@
 
     <div id="NewSubnetForm" class="modal">
 
-        <form id="new_subnet_form" action="/ip_manager/subnet/new">
+        <form id="new_subnet_form" action="{% url 'ip_manager:new_subnet' %}">
 
                     {% csrf_token %}
 
                     <div class="modal-content">
 
                         <div class="row">
-
 
                             <div class="input-field col s9">
                               <input name="name" id="name" type="text" class="validate">
@@ -160,7 +159,6 @@
             });
 
         }
-
 
         $( document ).ready(function () {
             init();

@@ -2,8 +2,8 @@
 
 {% block navigation %}
 <ul id="dropdown1" class="dropdown-content">
-  <li><a class="black-text" href="#!">one</a></li>
-  <li><a class="black-text" href="#!">two</a></li>
+  <li><a class="black-text" href="">one</a></li>
+  <li><a class="black-text" href="">two</a></li>
   <li class="divider"></li>
   <li class="center"><button id="new_subnet_button" data-target="NewSubnetForm" class="btn modal-trigger black white-text">New Subnet</button></li>
 </ul>
@@ -59,7 +59,7 @@
                     <tbody>
                       {% for s in subnets %}
                       <tr>
-                          <td><a href="/ip_manager/hosts/{{ s.name }}">{{ s.name }}</a></td>
+                          <td><a href="{% url 'ip_manager:host_index' s.name %}">{{ s.name }}</a></td>
                           <td>{{ s.first_host }}{{ s.cidr }}</td>
                           <td>{{ s.vlan }}</td>
                           <td>{{ s.netmask }}</td>

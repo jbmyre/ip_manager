@@ -1,4 +1,4 @@
-<form id="new_subnet_form" action="/ip_manager/subnet/new">
+<form id="new_subnet_form" action="{% url 'ip_manager:new_subnet' %}">
 
             {% csrf_token %}
 

@@ -63,10 +63,10 @@ def view_subnet_table(request):
     return request
 
 
-def single_host_ping(request, ip):
+def single_host_ping(request, id):
     """pings a single host"""
-    print ip
-    host = Host.objects.get(id=ip)
+    print "SUP"
+    host = Host.objects.get(id=id)
     output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
     print output.decode('utf-8')
     if "unknown host" in output.decode('utf-8'):

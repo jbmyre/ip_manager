@@ -4,7 +4,7 @@
 </div>
 
 
-<form id="host_update_form" action="http://129.228.157.88:8000/ip_manager/update/host/">
+<form id="host_update_form" action="{% url 'ip_manager:update_host' %}">
     <div class="modal-content">
         {% csrf_token %}
          <input type="hidden" name="address" value="{{ h.address }}"/>
