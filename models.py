@@ -11,42 +11,57 @@ class Subnet(models.Model):
     name = models.CharField(
         max_length=100
     )
-
     vlan = models.IntegerField(
         verbose_name='Vlan Id'
     )
-
-    first_host = models.GenericIPAddressField(protocol='IPv4')
-    last_host = models.GenericIPAddressField(protocol='IPv4')
-
+    first_host = models.GenericIPAddressField(
+        protocol='IPv4'
+    )
+    last_host = models.GenericIPAddressField(
+        protocol='IPv4'
+    )
     cidr = models.CharField(
         max_length=3,
         default='/24',
         help_text='The CIDR notation for the subnet (ie "/24"). defaults to /24'
     )
-
-    netmask = models.GenericIPAddressField(protocol='IPv4', default="255.255.255.0")
-    broadcast = models.GenericIPAddressField(protocol='IPv4')
-    dns_1 = models.GenericIPAddressField(protocol='IPv4')
-    dns_2 = models.GenericIPAddressField(protocol='IPv4')
-    gateway = models.GenericIPAddressField(protocol='IPv4')
-    last_sweep = models.DateTimeField(null=True)
-
+    netmask = models.GenericIPAddressField(
+        protocol='IPv4',
+        default="255.255.255.0"
+    )
+    broadcast = models.GenericIPAddressField(
+        protocol='IPv4'
+    )
+    dns_1 = models.GenericIPAddressField(
+        blank=True,
+        null=True,
+        protocol='IPv4'
+    )
+    dns_2 = models.GenericIPAddressField(
+        blank=True,
+        null=True,
+        protocol='IPv4'
+    )
+    gateway = models.GenericIPAddressField(
+        protocol='IPv4'
+    )
+    last_sweep = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
     SUBNET_TYPE_CHOICES = (
         (STATIC, 'Static'),
         (DHCP, 'DHCP'),
     )
-
     type = models.CharField(
         max_length=20,
         choices=SUBNET_TYPE_CHOICES,
         default=STATIC,
     )
-
     dhcp_range = models.GenericIPAddressField(
         blank=True,
+        null=True,
         protocol='IPv4',
-        null=True
     )
 
     def __str__(self):
@@ -73,12 +88,19 @@ class Host(models.Model):
         max_length=100
     )
     building = models.CharField(
+        blank=True,
+        null=True,
         max_length=100
     )
     location = models.CharField(
+        blank=True,
+        null=True,
         max_length=100
     )
-    machine_dec = models.TextField()
+    machine_dec = models.TextField(
+        blank=True,
+        null=True,
+    )
 
     ADDRESS_TYPE_CHOICES = (
         (STATIC, 'Static'),
@@ -90,9 +112,17 @@ class Host(models.Model):
         default=STATIC,
     )
 
-    eth_port = models.IntegerField(verbose_name='Vlan Id', default=0, )
+    eth_port = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Vlan Id',
+        default=0,
+    )
 
-    notes = models.TextField()
+    notes = models.TextField(
+        blank=True,
+        null=True,
+    )
 
     PING_STATUS_CHOICES = (
         (SUCCESS, 'Success'),
