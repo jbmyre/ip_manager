@@ -4,30 +4,30 @@
 
 {% block navigation %}
     <ul id="dropdown1" class="dropdown-content">
-      <li><a class="black-text" href="#!">one</a></li>
+      <li><a class="" href=""></a></li>
       <li class="divider"></li>
-      <li class="center"><button id="new_subnet_button" data-target="NewSubnetForm" class="btn modal-trigger black white-text">New Subnet</button></li>
+      <li class="center"><button id="new_subnet_button" data-target="NewSubnetForm" class="btn modal-trigger">New Subnet</button></li>
     </ul>
 
     <div class="navbar-fixed">
         <nav>
-          <div class="nav-wrapper white">
+          <div class="nav-wrapper">
 
-            <a href="/ip_manager" class="brand-logo grey-text">{{subnet_name}}</a>
+            <a href="/ip_manager" class="brand-logo">{{subnet_name}}</a>
 
-            <ul class="right hide-on-med-and-down grey-text">
+            <ul class="right hide-on-med-and-down ">
            {#<li><a  class="grey-text" href="sass.html">Sass</a></li>#}
              <li>
                   <form>
                     <div class="input-field">
                       <input id="search" type="search" required>
-                      <label for="search"><i class="material-icons grey-text">search</i></label>
+                      <label for="search"><i class="material-icons">search</i></label>
                       <i class="material-icons ">close</i>
                     </div>
                   </form>
               </li>
 
-              <li class="center"><a class="dropdown-button grey-text center" data-activates="dropdown1">Subnets<i class="material-icons right grey-text">arrow_drop_down</i></a></li>
+              <li class="center"><a class="dropdown-button center" data-activates="dropdown1">Subnets<i class="material-icons right">arrow_drop_down</i></a></li>
             </ul>
 
           </div>
@@ -42,10 +42,10 @@
 
         <div class="card-panel hoverable">
            <div class="row">
-               <div class="col s3">
+               <div class="col l2 s12">
                    <a class="waves-effect waves-light btn">Find an open IP</a>
                </div>
-               <div class="col s3">
+               <div class="col l2 s12">
                    <a onclick="ping_sweep()" class="waves-effect waves-light btn">Ping Sweep</a>
                </div>
            </div>
@@ -78,7 +78,7 @@
 
     </div>
 
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <div class="fixed-action-btn hide-on-med-and-down" style="bottom: 45px; right: 24px;">
         <a class="btn-floating btn-large white">
           <i class="large material-icons grey-text text-darken-3">more_vert</i>
         </a>
@@ -132,7 +132,6 @@
         }
 
         function ping_host(id){
-            //var url ="http://129.228.157.88:8000/ip_manager/ping_host/" + ip;
             var url = "ping_host/" + id;
             $.get(url,function () {
                 load_page();
