@@ -13,7 +13,7 @@ Django app to manage IP addresses and subnets.
 
 ###Install 
 
-```pip install ipcalc arrow```
+```pip install django ipcalc arrow```
 
 add ```'ip_manager'``` to INSTALLED_APPS in settings.py
 
