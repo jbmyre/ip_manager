@@ -81,6 +81,31 @@ def single_host_ping(request, id):
     return HttpResponse("ok")
 
 
+def ping_sweep(request, subnet):
+    """pings all hosts on a subnet"""
+
+    subnet = Host.objects.filter(subnet__exact=subnet)
+
+    for host in subnet:
+        output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
+
+        if "Access denied" in output.decode('utf-8'):
+            return HttpResponse("Ping Sweep Failed")
+
+        elif "unknown host" in output.decode('utf-8'):
+            host.ping_status = "Undetermined"
+        else:
+            if "0" in output.decode('utf-8').split(",")[1]:
+                host.ping_status = "Fail"
+            else:
+                host.ping_status = "Success"
+
+        host.last_ping = arrow.now('local').isoformat()
+        host.save()
+
+    return HttpResponse("Ping Sweep Complete")
+
+
 def new_subnet(request):
     """Create a new subnet object and all its host objects"""
     form = request.POST
@@ -117,4 +142,11 @@ def new_subnet(request):
         ip = str(host_ip)
         h = Host(address=ip, subnet=name)
         h.save(force_insert=True)
-    return HttpResponse("ok")
+    return HttpResponse("New Subnet created")
+
+
+def find_open_host(request, subnet):
+    host = Host.objects.filter(subnet__exact=subnet).filter(machine_name='').first()
+    details = {'host': host}
+    return render(request, "ip_manager/open_host_details.html", details)
+

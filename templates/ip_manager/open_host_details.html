@@ -1,42 +1,42 @@
-{% for h in host %}
+
 <div class="row">
-    <div class="col s12"><h5>Details for: {{ h.address }}</h5></div>
+    <div class="col s12"><h5>Details for: {{ host.address }}</h5></div>
 </div>
 
 
 <form id="host_update_form" action="{% url 'ip_manager:update_host' %}">
     <div class="modal-content">
         {% csrf_token %}
-         <input type="hidden" name="address" value="{{ h.address }}"/>
+         <input type="hidden" name="address" value="{{ host.address }}"/>
         <div class="row">
             <div class="input-field col s3">
-              <input value="{{ h.machine_name }}" name="name" id="name" type="text" class="validate">
+              <input value="{{ host.machine_name }}" name="name" id="name" type="text" class="validate">
               <label class="active" for="machine_name">Machine Name</label>
             </div>
 
             <div class="input-field col s3">
-              <input value="{{ h.building }}" name="building" id="building" type="text" class="validate">
+              <input value="{{ host.building }}" name="building" id="building" type="text" class="validate">
               <label class="active" for="building">Building</label>
             </div>
 
             <div class="input-field col s3">
-              <input value="{{ h.location }}" name="location" id="location" type="text" class="validate">
+              <input value="{{ host.location }}" name="location" id="location" type="text" class="validate">
               <label class="active" for="location">Location</label>
             </div>
 
              <div class="input-field col s3">
-              <input value="{{ h.eth_port }}" name="eth_port" id="eth_port" type="text" class="validate">
+              <input value="{{ host.eth_port }}" name="eth_port" id="eth_port" type="text" class="validate">
               <label class="active" for="eth_port">Ethernet Port</label>
             </div>
         </div>
 
         <div class="row">
             <div class="input-field col s6">
-              <textarea name="machine_dec" id="machine_dec" class="materialize-textarea">{{ h.machine_dec }}</textarea>
+              <textarea name="machine_dec" id="machine_dec" class="materialize-textarea">{{ host.machine_dec }}</textarea>
               <label class="active" for="machine_dec">Machine Description</label>
             </div>
             <div class="input-field col s6">
-              <textarea name="notes" id="notes" class="materialize-textarea">{{ h.notes }}</textarea>
+              <textarea name="notes" id="notes" class="materialize-textarea">{{ host.notes }}</textarea>
               <label class="active" for="notes">Notes</label>
             </div>
         </div>
@@ -79,5 +79,3 @@
 {#  }#}
 {#</script>#}
 
-
-{% endfor %}

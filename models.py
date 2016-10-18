@@ -146,8 +146,8 @@ class Host(models.Model):
         blank=True,
         null=True)
 
-    def __str__(self):
-        return "%s" % self.address
+   #def __str__(self):
+    #    return "%s" % self.address
 
     class Meta:
         ordering = ('id',)
