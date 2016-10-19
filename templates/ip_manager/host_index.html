@@ -7,6 +7,8 @@
       <li><a class="" href=""></a></li>
       <li class="divider"></li>
       <li class="center"><button id="new_subnet_button" data-target="NewSubnetForm" class="btn modal-trigger">New Subnet</button></li>
+      <li class="center"><a onclick="find_open_host()">Find an open IP</a></li>
+      <li><a onclick="ping_sweep()">Ping Sweep</a></li>
     </ul>
 
     <div class="navbar-fixed">
@@ -17,21 +19,13 @@
 
             <ul class="right hide-on-med-and-down ">
            {#<li><a  class="grey-text" href="sass.html">Sass</a></li>#}
-             <li>
-                  <form>
-                    <div class="input-field">
-                      <input id="search" type="search" required>
-                      <label for="search"><i class="material-icons">search</i></label>
-                      <i class="material-icons ">close</i>
-                    </div>
-                  </form>
-              </li>
-
-              <li class="center"><a class="dropdown-button center" data-activates="dropdown1">Subnets<i class="material-icons right">arrow_drop_down</i></a></li>
+              <li class="center"><a class="dropdown-button center" data-activates="dropdown1">Actions<i class="material-icons right">arrow_drop_down</i></a></li>
             </ul>
 
           </div>
         </nav>
+
+
     </div>
 {% endblock %}
 
@@ -40,7 +34,7 @@
 
     <div class="container">
 
-        <div class="card-panel hoverable">
+        <div class="card-panel hoverable" hidden>
            <div class="row">
                <div class="col l2 s12">
                    <a onclick="find_open_host()" class="waves-effect waves-light btn">Find an open IP</a>
@@ -92,6 +86,26 @@
         <div id="host_details"></div>
     </div>
 
+    <div id="ping_modal" class="modal">
+     <div class="modal-content">
+         <div class="row">
+                   <div class="col s8 offset-s2">
+                        <h5>Pinging all hosts on: {{subnet_name}}</h5>
+                   </div>
+               </div>
+
+               <div class="row">
+                   <div class="col s8 offset-s2">
+                         <div class="progress">
+                             <div class="indeterminate"></div>
+                         </div>
+                   </div>
+               </div>
+     </div>
+
+    </div>
+
+
     <form id="token">
       {%csrf_token%}
       <input id="ip_addr" type='hidden' name='ip' value='' />
@@ -139,21 +153,17 @@
             });
 
         }
-
         function ping_sweep() {
-
-            $("#progress_wrapper").slideDown('fast', function () {
-               $.get("{% url 'ip_manager:ping_sweep' subnet_name %}",function (data) {
-                     $("#progress_wrapper").slideUp('fast',function () {
-                        Materialize.toast(data, 1000,"blue white-text", function () {
-                            load_page();
-                        });
-                     })
-
-               })
-
-            });
-
+           $("#ping_modal").openModal({
+              ready: function() {
+                   $.get("{% url 'ip_manager:ping_sweep' subnet_name %}",function (data) {
+                       $("#ping_modal").closeModal();
+                       Materialize.toast(data, 1000, "blue white-text", function () {
+                           load_page();
+                       });
+                   });
+              }
+           });
         }
 
         function find_open_host() {
@@ -163,6 +173,8 @@
               $("#host_modal").openModal();
           })
         }
+
+
 
          $(document).ready(function() {
             load_page();

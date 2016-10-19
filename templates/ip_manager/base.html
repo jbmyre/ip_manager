@@ -19,18 +19,12 @@
 
             {% block style %}{% endblock %}
 
-            #search{
-                margin: 0;
-                height: 64px;
-            }
+{#            #search{#}
+{#                margin: 0;#}
+{#                height: 64px;#}
+{#            }#}
 
-            nav .brand-logo {
-                position: absolute;
-                display: inline-block;
-                font-size: 2.1rem;
-                padding: 0 15px;
-                white-space: nowrap;
-            }
+
 
             .container {
                 margin: 0 auto;
@@ -154,17 +148,11 @@
 
             });
 
+
+
             $('.scrollspy').scrollSpy();
 
             $('.tooltipped').tooltip({delay: 50});
-
-            $('#search').autocomplete({
-                data: {
-                  "Apple": null,
-                  "Microsoft": null,
-                  "Google": 'http://placehold.it/250x250'
-                }
-            });
 
         }
 

@@ -157,3 +157,4 @@ class Host(models.Model):
 
 class PingHistory(models.Model):
     host = models.ForeignKey(Host, on_delete=models.CASCADE)
+

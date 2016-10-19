@@ -1,11 +1,12 @@
-import subprocess
 import arrow
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, render_to_response
 import ipcalc as calc
 from .models import Subnet, Host
 from django.core.exceptions import ObjectDoesNotExist
 import json
-#from .forms import NewSubnetForm
+import re
+import subprocess
+from sys import platform
 
 
 def subnets_index(request):
@@ -63,22 +64,49 @@ def view_subnet_table(request):
     return request
 
 
-def single_host_ping(request, id):
+def host_ping(request, id):
     """pings a single host"""
-    print "SUP"
+
+    print id
+
     host = Host.objects.get(id=id)
-    output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
-    print output.decode('utf-8')
-    if "unknown host" in output.decode('utf-8'):
-        host.ping_status = "Undetermined"
-    else:
-        if "0" in output.decode('utf-8').split(",")[1]:
-            host.ping_status = "Fail"
+
+    if platform == "linux" or platform == "linux2":
+
+        output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
+        print output.decode('utf-8')
+        if "unknown host" in output.decode('utf-8'):
+            host.ping_status = "Undetermined"
         else:
-            host.ping_status = "Success"
-    host.last_ping = arrow.now('local').isoformat()
-    host.save()
-    return HttpResponse("ok")
+            if "0" in output.decode('utf-8').split(",")[1]:
+                host.ping_status = "Fail"
+            else:
+                host.ping_status = "Success"
+        host.last_ping = arrow.now('local').isoformat()
+        host.save()
+        return HttpResponse("ok")
+
+    elif platform == "win32":
+        try:
+            ping = subprocess.Popen(["ping", "-n", "1", "-w", "100", host.address], stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
+            out, error = ping.communicate()
+            if out:
+                print out
+                # try:
+                #     minimum = int(re.findall(r"Minimum = (\d+)", out)[0])
+                #     maximum = int(re.findall(r"Maximum = (\d+)", out)[0])
+                #     average = int(re.findall(r"Average = (\d+)", out)[0])
+                #     packet = int(re.findall(r"Lost = (\d+)", out)[0])
+                #     if packet > 1:
+                #         packet = 5 / packet * 100
+                # except:
+                #     print "no data for one of minimum,maximum,average,packet"
+            else:
+                print 'No ping'
+
+        except subprocess.CalledProcessError:
+            print "Couldn't get a ping"
 
 
 def ping_sweep(request, subnet):
@@ -86,24 +114,48 @@ def ping_sweep(request, subnet):
 
     subnet = Host.objects.filter(subnet__exact=subnet)
 
-    for host in subnet:
-        output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
+    if platform == "linux" or platform == "linux2":
 
-        if "Access denied" in output.decode('utf-8'):
-            return HttpResponse("Ping Sweep Failed")
+        for host in subnet:
+            output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
 
-        elif "unknown host" in output.decode('utf-8'):
-            host.ping_status = "Undetermined"
-        else:
-            if "0" in output.decode('utf-8').split(",")[1]:
-                host.ping_status = "Fail"
+            if "Access denied" in output.decode('utf-8'):
+                return HttpResponse("Ping Sweep Failed")
+
+            elif "unknown host" in output.decode('utf-8'):
+                host.ping_status = "Undetermined"
             else:
-                host.ping_status = "Success"
+                if "0" in output.decode('utf-8').split(",")[1]:
+                    host.ping_status = "Fail"
+                else:
+                    host.ping_status = "Success"
 
-        host.last_ping = arrow.now('local').isoformat()
-        host.save()
+            host.last_ping = arrow.now('local').isoformat()
+            host.save()
+        return HttpResponse("Ping Sweep Complete")
 
-    return HttpResponse("Ping Sweep Complete")
+    elif platform == "win32":
+        for host in subnet:
+            try:
+                ping = subprocess.Popen(["ping", "-n", "1","-w","100", host.address], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                out, error = ping.communicate()
+                if out:
+                    print out
+                    # try:
+                    #     minimum = int(re.findall(r"Minimum = (\d+)", out)[0])
+                    #     maximum = int(re.findall(r"Maximum = (\d+)", out)[0])
+                    #     average = int(re.findall(r"Average = (\d+)", out)[0])
+                    #     packet = int(re.findall(r"Lost = (\d+)", out)[0])
+                    #     if packet > 1:
+                    #         packet = 5 / packet * 100
+                    # except:
+                    #     print "no data for one of minimum,maximum,average,packet"
+                else:
+                    print 'No ping'
+
+            except subprocess.CalledProcessError:
+                print "Couldn't get a ping"
+        return HttpResponse("Ping Sweep Complete")
 
 
 def new_subnet(request):
@@ -149,4 +201,28 @@ def find_open_host(request, subnet):
     host = Host.objects.filter(subnet__exact=subnet).filter(machine_name='').first()
     details = {'host': host}
     return render(request, "ip_manager/open_host_details.html", details)
+
+
+def host_details_by_name(request):
+    print request
+    name = request.POST.get("name")
+    host = Host.objects.filter(machine_name__exact=name)
+    details = {'host': host}
+    return render(request, "ip_manager/open_host_details.html", details)
+
+
+def search_subnet(request, subnet):
+    """
+        autocomplete suggestions for machine names on a specified subnet.
+        :returns json
+    """
+
+    hosts = Host.objects.filter(subnet__exact=subnet).all()
+    host_dict = {}
+    for h in hosts:
+        if h.machine_name:
+            name = h.machine_name
+            host_dict[name] = ''
+    results = json.dumps(host_dict)
+    return HttpResponse(results, content_type="application/json")
 

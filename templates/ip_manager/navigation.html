@@ -15,15 +15,19 @@
 
         <ul class="right hide-on-med-and-down grey-text">
 {#          <li><a  class="grey-text" href="sass.html">Sass</a></li>#}
-         <li>
-              <form>
-                <div class="input-field">
-                  <input id="search" type="search" required>
-                  <label for="search"><i class="material-icons grey-text">search</i></label>
-                  <i class="material-icons ">close</i>
-                </div>
-              </form>
-            </li>
+
+              <li>
+                  <form id="search_form" action="{% url 'ip_manager:host_details_by_name' %}">
+                    {% csrf_token %}
+                    <div class="input-field">
+
+                      <input name="search" id="search" type="search" required>
+                      <label for="search"><i class="material-icons">search</i></label>
+                      <i class="material-icons ">close</i>
+                    </div>
+                  </form>
+              </li>
+
 
           <li class="center"><a class="dropdown-button grey-text center" href="#!" data-activates="dropdown1">Subnets<i class="material-icons right grey-text">arrow_drop_down</i></a></li>
         </ul>
