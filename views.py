@@ -21,7 +21,7 @@ def host_index(request, subnet):
 
 
 def host_table(request, subnet):
-    all_hosts = Host.objects.filter(subnet=subnet).all()
+    all_hosts = Host.objects.select_related().filter(subnet__name__exact=subnet).all()
     hosts = dict(hosts=all_hosts, subnet=subnet)
     return render(request, "ip_manager/host_table.html", hosts)
 
@@ -105,7 +105,7 @@ def ping_host(request, host_id):
 def ping_sweep(request, subnet):
     """pings all hosts on a subnet"""
 
-    subnet = Host.objects.filter(subnet__exact=subnet)
+    subnet = Host.objects.select_related().filter(subnet__name__exact=subnet).all()
 
     if platform == "linux" or platform == "linux2":
 
@@ -152,7 +152,6 @@ def new_subnet(request):
     cidr = form.get("cidr")
     cidr_notation = '%s%s' % (first_host, cidr)
     s = calc.Network(cidr_notation)
-
     name = form.get("name")
     vlan = form.get("vlan")
     first = str(s.host_first())
@@ -175,23 +174,25 @@ def new_subnet(request):
         gateway=gateway,
     )
 
-    n.save(force_insert=True)
+    n.save()
+    subnet_obj = Subnet.objects.get(name=name)
+    whole_subnet = calc.Network(cidr_notation)
 
-    for host_ip in calc.Network(cidr_notation):
+    for host_ip in whole_subnet:
         ip = str(host_ip)
-        h = Host(address=ip, subnet=name)
+        print ip
+        h = Host(machine_name='', address=ip, subnet=subnet_obj)
         h.save(force_insert=True)
     return HttpResponse("New Subnet created")
 
 
 def find_open_host(request, subnet):
-    host = Host.objects.filter(subnet__exact=subnet).filter(machine_name='').first()
+    host = Host.objects.select_related().filter(subnet__name__exact=subnet).filter(machine_name='').first()
     details = {'host': host}
     return render(request, "ip_manager/open_host_details.html", details)
 
 
 def host_details_by_name(request):
-    print request
     name = request.POST.get("name")
     host = Host.objects.filter(machine_name__exact=name)
     details = {'host': host}
@@ -204,7 +205,7 @@ def search_subnet(request, subnet):
         :returns json
     """
 
-    hosts = Host.objects.filter(subnet__exact=subnet).all()
+    hosts = Host.objects.select_related().filter(subnet__name__exact=subnet).all()
     host_dict = {}
     for h in hosts:
         if h.machine_name:

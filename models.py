@@ -87,9 +87,11 @@ class Host(models.Model):
 
     address = models.GenericIPAddressField(protocol='IPv4',unique=True)
 
-    subnet = models.CharField(
-        max_length=100
+    subnet = models.ForeignKey(
+        Subnet,
+        on_delete=models.CASCADE,
     )
+
     machine_name = models.CharField(
         blank=True,
         null=True,
