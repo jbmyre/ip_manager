@@ -72,7 +72,7 @@ def ping_host(request, host_id):
     if platform == "linux" or platform == "linux2":
 
         output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
-        print output.decode('utf-8')
+        print output.decode('utf-8').split(",")[1]
         if "unknown host" in output.decode('utf-8'):
             host.ping_status = "Undetermined"
         else:

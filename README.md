@@ -37,7 +37,6 @@ Find an open ip on a subnet.
 Material design
 
 ###Coming soon 
-
  
  Run ping sweeps on as a cron task
  
