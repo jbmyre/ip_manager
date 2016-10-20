@@ -64,7 +64,12 @@ class Subnet(models.Model):
         choices=SUBNET_TYPE_CHOICES,
         default=STATIC,
     )
-    dhcp_range = models.GenericIPAddressField(
+    dhcp_start = models.GenericIPAddressField(
+        blank=True,
+        null=True,
+        protocol='IPv4',
+    )
+    dhcp_end = models.GenericIPAddressField(
         blank=True,
         null=True,
         protocol='IPv4',
@@ -80,7 +85,8 @@ class Subnet(models.Model):
 
 class Host(models.Model):
     STATIC = 'Static'
-    DHCP_RESERVATION = 'DHCP'
+    DHCP_RESERVATION = 'DHCP_RESERVATION'
+    DHCP = 'DHCP'
     SUCCESS = 'Success'
     UNDETERMINED = 'Undetermined'
     FAIL = 'Fail'
@@ -116,6 +122,7 @@ class Host(models.Model):
     ADDRESS_TYPE_CHOICES = (
         (STATIC, 'Static'),
         (DHCP_RESERVATION, 'DHCP Reservation'),
+        (DHCP, 'DHCP'),
     )
     address_type = models.CharField(
         max_length=20,
@@ -148,17 +155,38 @@ class Host(models.Model):
 
     last_ping = models.DateTimeField(
         blank=True,
-        null=True)
+        null=True
+    )
 
-   #def __str__(self):
-    #    return "%s" % self.address
+    def __str__(self):
+        return "%s" % self.address
 
     class Meta:
         ordering = ('id',)
-        verbose_name = ('Host')
-        verbose_name_plural = ('Hosts')
+        verbose_name = 'Host'
+        verbose_name_plural = 'Hosts'
 
 
 class PingHistory(models.Model):
+    SUCCESS = 'Success'
+    UNDETERMINED = 'Undetermined'
+    FAIL = 'Fail'
+
     host = models.ForeignKey(Host, on_delete=models.CASCADE)
 
+    PING_STATUS_CHOICES = (
+        (SUCCESS, 'Success'),
+        (UNDETERMINED, 'Undetermined'),
+        (FAIL, 'Failed'),
+    )
+
+    ping_status = models.CharField(
+        max_length=20,
+        choices=PING_STATUS_CHOICES,
+        default=UNDETERMINED,
+    )
+
+    ping_date = models.DateTimeField(
+        blank=True,
+        null=True
+    )

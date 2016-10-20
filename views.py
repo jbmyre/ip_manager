@@ -71,8 +71,10 @@ def ping_host(request, host_id):
 
     if platform == "linux" or platform == "linux2":
 
-        output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
-        print output.decode('utf-8').split(",")[1]
+        output = subprocess.Popen(
+            ['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE
+        ).communicate()[0]
+
         if "unknown host" in output.decode('utf-8'):
             host.ping_status = "Undetermined"
         else:
@@ -104,13 +106,15 @@ def ping_host(request, host_id):
 
 def ping_sweep(request, subnet):
     """pings all hosts on a subnet"""
-
+    subnet_log = Subnet.objects.get(name__exact=subnet)
     subnet = Host.objects.select_related().filter(subnet__name__exact=subnet).all()
 
     if platform == "linux" or platform == "linux2":
 
         for host in subnet:
-            output = subprocess.Popen(['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE).communicate()[0]
+            output = subprocess.Popen(
+                ['ping', '-c', '1', '-t', '2', host.address], stdout=subprocess.PIPE
+            ).communicate()[0]
 
             if "Access denied" in output.decode('utf-8'):
                 return HttpResponse("Ping Sweep Failed")
@@ -124,13 +128,17 @@ def ping_sweep(request, subnet):
                     host.ping_status = "Success"
 
             host.last_ping = arrow.now('local').isoformat()
+            subnet_log.last_sweep = arrow.now('local').isoformat()
+            subnet_log.save()
             host.save()
         return HttpResponse("Ping Sweep Complete")
 
     elif platform == "win32":
         for host in subnet:
             try:
-                ping = subprocess.Popen(["ping", "-n", "1", "-w", "200", host.address], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                ping = subprocess.Popen(
+                    ["ping", "-n", "1", "-w", "200", host.address], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+                )
                 out, error = ping.communicate()
                 if out:
                     packet = int(re.findall(r"Lost = (\d+)", out)[0])
@@ -140,6 +148,8 @@ def ping_sweep(request, subnet):
                         host.ping_status = "Fail"
                     host.last_ping = arrow.now('local').isoformat()
                     host.save()
+                    subnet_log.last_sweep = arrow.now('local').isoformat()
+                    subnet_log.save()
             except subprocess.CalledProcessError:
                 print "Couldn't get a ping"
         return HttpResponse("Ping Sweep Complete")
@@ -153,6 +163,7 @@ def new_subnet(request):
     cidr_notation = '%s%s' % (first_host, cidr)
     s = calc.Network(cidr_notation)
     name = form.get("name")
+    name = name.replace(" ", "_")
     vlan = form.get("vlan")
     first = str(s.host_first())
     last = str(s.host_last())
@@ -180,7 +191,6 @@ def new_subnet(request):
 
     for host_ip in whole_subnet:
         ip = str(host_ip)
-        print ip
         h = Host(machine_name='', address=ip, subnet=subnet_obj)
         h.save(force_insert=True)
     return HttpResponse("New Subnet created")
