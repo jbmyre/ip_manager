@@ -25,11 +25,11 @@
           <td>{{ h.notes }}</td>
           <td class="center">{{ h.address_type }}</td>
           {% if h.ping_status == "Success"%}
-              <td class=""><a onclick="ping_host( '{{ h.id }}' )" class="btn-floating green  tooltipped" data-position="right" data-delay="50" data-tooltip="Ping Succeeded"></a></td>
+              <td class=""><a onclick="ping_host( '{{ h.id }}' )" class="btn-floating green "></a></td>
           {% elif h.ping_status == "Undetermined"%}
-              <td class="center"><a onclick="ping_host( '{{ h.id }}' )" class="btn-floating yellow darken-1 tooltipped" data-position="right" data-delay="50" data-tooltip="Could not reach the network"></a></td>
+              <td class="center"><a onclick="ping_host( '{{ h.id }}' )" class="btn-floating yellow darken-1" ></a></td>
           {% else %}
-              <td><a onclick="ping_host( '{{ h.id }}' )" class="btn-floating red tooltipped" data-position="right" data-delay="50" data-tooltip="Ping Failed"></a></td>
+              <td><a onclick="ping_host( '{{ h.id }}' )" class="btn-floating red"></a></td>
           {% endif %}
       </tr>
       {% endfor %}

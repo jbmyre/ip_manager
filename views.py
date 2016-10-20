@@ -64,12 +64,10 @@ def view_subnet_table(request):
     return request
 
 
-def host_ping(request, id):
+def ping_host(request, host_id):
     """pings a single host"""
 
-    print id
-
-    host = Host.objects.get(id=id)
+    host = Host.objects.get(id=host_id)
 
     if platform == "linux" or platform == "linux2":
 
@@ -84,29 +82,24 @@ def host_ping(request, id):
                 host.ping_status = "Success"
         host.last_ping = arrow.now('local').isoformat()
         host.save()
-        return HttpResponse("ok")
+        return HttpResponse("Ping Complete")
 
     elif platform == "win32":
         try:
-            ping = subprocess.Popen(["ping", "-n", "1", "-w", "100", host.address], stdout=subprocess.PIPE,
+            ping = subprocess.Popen(["ping", "-n", "1", "-w", "200", host.address], stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE)
             out, error = ping.communicate()
             if out:
-                print out
-                # try:
-                #     minimum = int(re.findall(r"Minimum = (\d+)", out)[0])
-                #     maximum = int(re.findall(r"Maximum = (\d+)", out)[0])
-                #     average = int(re.findall(r"Average = (\d+)", out)[0])
-                #     packet = int(re.findall(r"Lost = (\d+)", out)[0])
-                #     if packet > 1:
-                #         packet = 5 / packet * 100
-                # except:
-                #     print "no data for one of minimum,maximum,average,packet"
-            else:
-                print 'No ping'
-
+                packet = int(re.findall(r"Lost = (\d+)", out)[0])
+                if packet == 0:
+                    host.ping_status = "Success"
+                else:
+                    host.ping_status = "Fail"
+                host.last_ping = arrow.now('local').isoformat()
+                host.save()
         except subprocess.CalledProcessError:
             print "Couldn't get a ping"
+        return HttpResponse("Ping Complete")
 
 
 def ping_sweep(request, subnet):
@@ -137,22 +130,16 @@ def ping_sweep(request, subnet):
     elif platform == "win32":
         for host in subnet:
             try:
-                ping = subprocess.Popen(["ping", "-n", "1","-w","100", host.address], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                ping = subprocess.Popen(["ping", "-n", "1", "-w", "200", host.address], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 out, error = ping.communicate()
                 if out:
-                    print out
-                    # try:
-                    #     minimum = int(re.findall(r"Minimum = (\d+)", out)[0])
-                    #     maximum = int(re.findall(r"Maximum = (\d+)", out)[0])
-                    #     average = int(re.findall(r"Average = (\d+)", out)[0])
-                    #     packet = int(re.findall(r"Lost = (\d+)", out)[0])
-                    #     if packet > 1:
-                    #         packet = 5 / packet * 100
-                    # except:
-                    #     print "no data for one of minimum,maximum,average,packet"
-                else:
-                    print 'No ping'
-
+                    packet = int(re.findall(r"Lost = (\d+)", out)[0])
+                    if packet == 0:
+                        host.ping_status = "Success"
+                    else:
+                        host.ping_status = "Fail"
+                    host.last_ping = arrow.now('local').isoformat()
+                    host.save()
             except subprocess.CalledProcessError:
                 print "Couldn't get a ping"
         return HttpResponse("Ping Sweep Complete")
