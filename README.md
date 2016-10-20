@@ -32,15 +32,12 @@ run ```./manage.py migrate```
 
 Pings hosts or entire subnets, from the browser
 
-The ping functionality only works on linux or osx at the moment.
-
 Find an open ip on a subnet.
 
 Material design
 
 ###Coming soon 
 
- Ping functionality on windows
  
  Run ping sweeps on as a cron task
  
