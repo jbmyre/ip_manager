@@ -91,6 +91,8 @@ class Host(models.Model):
         max_length=100
     )
     machine_name = models.CharField(
+        blank=True,
+        null=True,
         max_length=100
     )
     building = models.CharField(

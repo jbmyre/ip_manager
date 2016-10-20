@@ -6,7 +6,7 @@ app_name = 'ip_manager'
 
 urlpatterns = [
     url(r'^$', views.subnets_index, name='subnet_index'),
-    url(r'^hosts/(?P<subnet>[\w\-]+)/', views.host_index, name='host_index'),
+    url(r'^hosts/(?P<subnet>[\w\-]+)', views.host_index, name='host_index'),
     url(r'^ping_host/(?P<host_id>\d+)', views.ping_host, name='ping_host'),
     url(r'^ping_host/', views.ping_host, name='host_ping'),
     url(r'^ping_sweep/(?P<subnet>[\w\-]+)', views.ping_sweep, name='ping_sweep'),
