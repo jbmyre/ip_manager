@@ -9,6 +9,7 @@ import subprocess
 from sys import platform
 import socket
 
+
 def subnets_index(request):
     network = Subnet.objects.all()
     subnets = dict(subnets=network)
@@ -60,8 +61,9 @@ def view_subnet_table(request):
     """
     Return all hosts' details on a requested subnet in a HTML table.
     """
-
-    return request
+    network = Subnet.objects.all()
+    subnets = dict(subnets=network)
+    return render(request, "ip_manager/subnet_table.html", subnets)
 
 
 def ping_host(request, host_id):

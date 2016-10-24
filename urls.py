@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^update/host', views.update_host, name='update_host'),
     url(r'^details', views.host_details, name='host_details'),
     url(r'^subnet/new', views.new_subnet, name='new_subnet'),
+    url(r'^subnet/table', views.view_subnet_table, name='subnet_table'),
     url(r'^subnet/new_subnet_form', views.new_subnet_form, name='new_subnet_form'),
     url(r'^details_by_name', views.host_details_by_name, name='host_details_by_name'),
 ]

@@ -137,7 +137,9 @@
                 var posting = $.post( url, form);
 
                 posting.done(function( data ) {
-                    $("#NewSubnetForm").closeModal();
+                    $("#subnet_table").load("{% url 'ip_manager:subnet_table' %}", function() {
+                      $("#NewSubnetForm").closeModal();
+                    });
                 });
 
             });
