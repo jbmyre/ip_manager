@@ -7,7 +7,7 @@ import json
 import re
 import subprocess
 from sys import platform
-
+import socket
 
 def subnets_index(request):
     network = Subnet.objects.all()
@@ -82,6 +82,11 @@ def ping_host(request, host_id):
                 host.ping_status = "Fail"
             else:
                 host.ping_status = "Success"
+            try:
+                socket.gethostbyaddr(host.address)
+                host.machine_name = socket.gethostbyaddr(host.address)[0]
+            except:
+                host.machine_name = host.machine_name
         host.last_ping = arrow.now('local').isoformat()
         host.save()
         return HttpResponse("Ping Complete")
@@ -97,6 +102,11 @@ def ping_host(request, host_id):
                     host.ping_status = "Success"
                 else:
                     host.ping_status = "Fail"
+                try:
+                    socket.gethostbyaddr(host.address)
+                    host.machine_name = socket.gethostbyaddr(host.address)[0]
+                except:
+                    host.machine_name = host.machine_name
                 host.last_ping = arrow.now('local').isoformat()
                 host.save()
         except subprocess.CalledProcessError:
@@ -126,7 +136,11 @@ def ping_sweep(request, subnet):
                     host.ping_status = "Fail"
                 else:
                     host.ping_status = "Success"
-
+            try:
+                socket.gethostbyaddr(host.address)
+                host.machine_name = socket.gethostbyaddr(host.address)[0]
+            except:
+                host.machine_name = host.machine_name
             host.last_ping = arrow.now('local').isoformat()
             subnet_log.last_sweep = arrow.now('local').isoformat()
             subnet_log.save()
@@ -146,6 +160,11 @@ def ping_sweep(request, subnet):
                         host.ping_status = "Success"
                     else:
                         host.ping_status = "Fail"
+                    try:
+                        socket.gethostbyaddr(host.address)
+                        host.machine_name = socket.gethostbyaddr(host.address)[0]
+                    except:
+                        host.machine_name = host.machine_name
                     host.last_ping = arrow.now('local').isoformat()
                     host.save()
                     subnet_log.last_sweep = arrow.now('local').isoformat()
