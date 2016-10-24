@@ -216,7 +216,12 @@ def new_subnet(request):
 
 
 def find_open_host(request, subnet):
-    host = Host.objects.select_related().filter(subnet__name__exact=subnet).filter(machine_name='').first()
+    host = Host.objects.select_related().filter(
+        subnet__name__exact=subnet).filter(
+        machine_name='').filter(
+        ping_status__exact="Fail"
+    ).first()
+
     details = {'host': host}
     return render(request, "ip_manager/open_host_details.html", details)
 
